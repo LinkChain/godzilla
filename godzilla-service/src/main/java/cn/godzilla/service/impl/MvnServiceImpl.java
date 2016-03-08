@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import cn.godzilla.command.Command;
 import cn.godzilla.command.CommandEnum;
@@ -206,11 +207,12 @@ public class MvnServiceImpl extends GodzillaServiceApplication implements MvnSer
 			Command shellCommand = new DefaultShellCommand();
 			shellCommand.execute(commandStr1, CommandEnum.LSJAR);
 			boolean ok_shell = OK_SHELL.equals(shellReturnThreadLocal.get()) ? true : false;
-			if(!ok_shell) {
+			//201603008 如果调用 restartTomcat命令 而tomcat未启动将war解包为目录 则此处报错
+			/*if(!ok_shell) {
 				logger.error(">>>shell执行失败："+commandStr1);
 				return ReturnCodeEnum.getByReturnCode(NO_JAVASHELLCALL);
-			}
-			jarlog = jarlogThreadLocal.get();
+			}*/
+			jarlog = StringUtils.isEmpty(jarlogThreadLocal.get())?"":jarlogThreadLocal.get();
 		}
 		
 		//保存mvn部署日志
