@@ -2,7 +2,7 @@ package cn.godzilla.web;
 
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,7 +67,7 @@ public class MvnController extends GodzillaWebApplication{
 		 * 准生产	　所有项目只允许一个人发布
 		 * 生产　　　所有项目只允许一个人发布
 		 */
-		Lock lock = null;
+		ReentrantLock lock = null;
 		boolean hasAC = false;
 		try {
 			if(profile.equals(TEST_PROFILE)) {
@@ -97,7 +97,8 @@ public class MvnController extends GodzillaWebApplication{
 		} finally {
 			if(lock!=null) {
 				try {
-					lock.unlock();
+					if(lock.isHeldByCurrentThread())
+						lock.unlock();
 				} /*catch(InvocationTargetException e2) {
 					return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
 				} */

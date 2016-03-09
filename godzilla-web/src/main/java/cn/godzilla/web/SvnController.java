@@ -2,6 +2,7 @@ package cn.godzilla.web;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -84,7 +85,7 @@ public class SvnController extends GodzillaWebApplication {
 		 * 准生产   只允许　一个人merge(i.svn操作会清空work目录)
 		 * 生产　 只允许　一个人merge(i.svn操作会清空work目录)
 		 **/
-		Lock lock1 = null;
+		ReentrantLock lock1 = null;
 		boolean hasAC1 = false;
 		try {
 			if(TEST_PROFILE.equals(profile)) {
@@ -111,7 +112,8 @@ public class SvnController extends GodzillaWebApplication {
 		} finally {
 			if(lock1!=null) {
 				try {
-					lock1.unlock();
+					if(lock1.isHeldByCurrentThread())
+						lock1.unlock();
 				} /*catch(InvocationTargetException e2) {
 					return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
 				} */catch(IllegalMonitorStateException e1) {
@@ -148,9 +150,9 @@ public class SvnController extends GodzillaWebApplication {
 		 * 1.限制并发　
 		 * 日常环境,准生产,生产　每个项目　只允许　一个人提交(i.svn操作会清空work目录ii.改变svn主干代码,对其他所有操作都有影响) 
 		 **/
-		Lock lock1 = null;
-		Lock lock2 = null;
-		Lock lock3 = null;
+		ReentrantLock lock1 = null;
+		ReentrantLock lock2 = null;
+		ReentrantLock lock3 = null;
 		boolean hasAC1 = false;
 		boolean hasAC2 = false;
 		boolean hasAC3 = false;
@@ -181,7 +183,8 @@ public class SvnController extends GodzillaWebApplication {
 		} finally {
 			if(lock1!=null){
 				try {
-					lock1.unlock();
+					if(lock1.isHeldByCurrentThread())
+						lock1.unlock();
 				} /*catch(InvocationTargetException e2) {
 					return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
 				} */catch(IllegalMonitorStateException e1) {
@@ -190,7 +193,8 @@ public class SvnController extends GodzillaWebApplication {
 			}
 			if(lock2!=null) {
 				try {
-					lock2.unlock();
+					if(lock2.isHeldByCurrentThread())
+						lock2.unlock();
 				} /*catch(InvocationTargetException e2) {
 					return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
 				} */catch(IllegalMonitorStateException e1) {
@@ -199,7 +203,8 @@ public class SvnController extends GodzillaWebApplication {
 			}
 			if(lock3!=null) {
 				try {
-					lock3.unlock();
+					if(lock3.isHeldByCurrentThread())
+						lock3.unlock();
 				} /*catch(InvocationTargetException e2) {
 					return ReturnCodeEnum.getByReturnCode(NO_HASKEYDEPLOY);
 				} */catch(IllegalMonitorStateException e1) {
@@ -300,7 +305,7 @@ public class SvnController extends GodzillaWebApplication {
 		 * 准生产   只允许　一个人merge(i.svn操作会清空work目录)
 		 * 生产　 只允许　一个人merge(i.svn操作会清空work目录)
 		 **/
-		Lock lock1 = null;
+		ReentrantLock lock1 = null;
 		boolean hasAC1 = false;
 		try {
 			if(TEST_PROFILE.equals(profile)) {
@@ -328,7 +333,8 @@ public class SvnController extends GodzillaWebApplication {
 		} finally {
 			if(lock1!=null) {
 				try {
-					lock1.unlock();
+					if(lock1.isHeldByCurrentThread())
+						lock1.unlock();
 				} catch(IllegalMonitorStateException e1) {
 					return ReturnCodeEnum.getByReturnCode(NO_CONCURRENCEDEPLOY);
 				} 
